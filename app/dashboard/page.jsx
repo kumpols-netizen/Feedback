@@ -89,6 +89,50 @@ export default function InstructorDashboard() {
     }));
   };
 
+  const handleExportCSV = () => {
+    if (feedback.length === 0) {
+      alert("No data available to export.");
+      return;
+    }
+
+    const headers = [
+      "Date",
+      "Student ID",
+      "Clarity",
+      "Difficulty",
+      "Engagement",
+      "Materials/Usefulness",
+      "Success Areas (Like Most)",
+      "Points of Friction (Difficulties)"
+    ];
+
+    const rows = feedback.map(item => [
+      `"${item.createdAt || ''}"`,
+      `"${item.studentId || ''}"`,
+      item.clarity || 0,
+      item.difficulty || 0,
+      item.engagement || 0,
+      item.usefulness || 0,
+      `"${(item.likeMost || '').replace(/"/g, '""')}"`,
+      `"${(item.difficulties || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(e => e.join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `feedback_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
     window.location.href = '/login';
@@ -141,7 +185,10 @@ export default function InstructorDashboard() {
             <p className="text-lg text-on-surface-variant font-medium">Global Course Overview • Fall Semester 2024</p>
           </div>
           <div className="flex flex-wrap gap-4 w-full md:w-auto">
-            <button className="flex-1 md:flex-none bg-primary text-white h-[50px] px-6 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary-container transition-all shadow-sm">
+            <button 
+              onClick={handleExportCSV}
+              className="flex-1 md:flex-none bg-primary text-white h-[50px] px-6 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary-container transition-all shadow-sm"
+            >
               <Download className="w-4 h-4" />
               Export CSV
             </button>
