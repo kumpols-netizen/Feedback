@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-headline: "Inter", "Helvetica Neue", Arial, sans-serif;
+  
+  --color-primary: #111827;
+  --color-primary-container: #1f2937;
+  --color-on-primary: #ffffff;
+  
+  --color-secondary: #10b981;
+  --color-secondary-container: #ecfdf5;
+  --color-on-secondary-container: #065f46;
+  
+  --color-tertiary: #f59e0b;
+  --color-tertiary-container: #fffbeb;
+  --color-on-tertiary-container: #92400e;
+  
+  --color-surface: #f9fafb;
+  --color-surface-dim: #f3f4f6;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #ffffff;
+  --color-surface-container: #ffffff;
+  --color-surface-container-high: #f9fafb;
+  --color-surface-container-highest: #f3f4f6;
+  
+  --color-on-surface: #111827;
+  --color-on-surface-variant: #4b5563;
+  --color-outline: #e5e7eb;
+  --color-outline-variant: #f3f4f6;
+  
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-3xl: 16px;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-on-surface font-sans;
+  }
+}
+
+@layer utilities {
+  .text-display-lg {
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .text-display-sm {
+    font-size: 2.25rem;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  .text-headline-lg {
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+}

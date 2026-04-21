@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'kumpol.s@chula.ac.th' && request.auth.token.email_verified == true;
+    }
+
+    match /feedback/{feedbackId} {
+      function isValidFeedback(data) {
+        return data.clarity is number && data.clarity >= 1 && data.clarity <= 5
+            && data.difficulty is number && data.difficulty >= 1 && data.difficulty <= 5
+            && data.engagement is number && data.engagement >= 1 && data.engagement <= 5
+            && data.usefulness is number && data.usefulness >= 1 && data.usefulness <= 5
+            && data.createdAt is timestamp
+            && (data.get('likeMost', '') is string && data.get('likeMost', '').size() <= 2000)
+            && (data.get('difficulties', '') is string && data.get('difficulties', '').size() <= 2000)
+            && (data.get('suggestions', '') is string && data.get('suggestions', '').size() <= 2000)
+            && (data.get('studentId', '') is string && data.get('studentId', '').size() <= 64);
+      }
+
+      allow create: if isValidId(feedbackId) && isValidFeedback(request.resource.data) && request.resource.data.createdAt == request.time;
+      // TEMPORARY: Allow public read for "pass-through" access as per user request.
+      // In a production environment, this should be restricted back to isAdmin().
+      allow get, list: if true;
+    }
+    
+    // Testing collection
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

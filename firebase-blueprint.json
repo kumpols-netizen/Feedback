@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "Feedback": {
+      "title": "Feedback",
+      "description": "Student feedback record",
+      "type": "object",
+      "properties": {
+        "clarity": { "type": "number", "description": "Clarity rating 1-5" },
+        "difficulty": { "type": "number", "description": "Difficulty rating 1-5" },
+        "engagement": { "type": "number", "description": "Engagement rating 1-5" },
+        "usefulness": { "type": "number", "description": "Usefulness rating 1-5" },
+        "likeMost": { "type": "string", "description": "Qualitative feedback: liked most" },
+        "difficulties": { "type": "string", "description": "Qualitative feedback: faced difficulties" },
+        "suggestions": { "type": "string", "description": "Qualitative feedback: suggestions" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the feedback was submitted" },
+        "studentId": { "type": "string", "description": "Short ID or hash for the student (for display)" }
+      },
+      "required": ["clarity", "difficulty", "engagement", "usefulness", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Collection of student feedback submissions"
+    }
+  }
+}
